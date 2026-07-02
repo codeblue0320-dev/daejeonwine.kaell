@@ -1,5 +1,5 @@
 /* 오프라인 캐싱 + 알림 서비스워커 (PWA v2) */
-const CACHE = 'wine-variety-v2';
+const CACHE = 'wine-variety-v3';
 const ASSETS = [
   './', './index.html', './app.js', './wines.js', './varieties.js',
   './manifest.json', './icon-192.png', './icon-512.png', './apple-touch-icon.png',
