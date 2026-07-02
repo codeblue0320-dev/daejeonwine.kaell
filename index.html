@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>오늘의 와인 & 포도 품종</title>
+<meta name="description" content="날씨 맞춤 와인 추천 + 매일 포도 품종 학습 + 금요일 퀴즈">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#7b1f2b">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="와인&품종">
+<style>
+:root{color-scheme:light;--bg:#faf6f2;--card:#fff;--ink:#2b1d1f;--muted:#8a7770;--wine:#7b1f2b;--wine2:#a83246;--gold:#b8863b;--line:#ece2db;--red-wine:#8c2230}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.55;padding:16px 16px 60px;max-width:720px;margin:0 auto}
+h1{font-size:20px;margin:0 0 12px;letter-spacing:-.3px}
+.sub{color:var(--muted);font-size:13px;margin-bottom:14px}
+.tabs{display:flex;gap:6px;margin-bottom:16px;position:sticky;top:0;background:var(--bg);padding:6px 0;z-index:5}
+.tabbtn{flex:1;padding:10px 6px;border:1px solid var(--line);background:#fff;border-radius:12px;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer}
+.tabbtn.on{background:var(--wine);color:#fff;border-color:var(--wine)}
+.tabpane{display:none}
+.tabpane.show{display:block}
+.install{display:none;align-items:center;gap:10px;background:var(--wine);color:#fff;border-radius:14px;padding:12px 14px;margin-bottom:16px;font-size:13px}
+.install.show{display:flex}
+.install .go{margin-left:auto;background:#fff;color:var(--wine);border:none;border-radius:9px;padding:7px 12px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap}
+.install .x{background:transparent;color:#fff;border:none;font-size:18px;padding:0 2px;cursor:pointer}
+.ioshint{display:none;background:#fff4ec;border:1px solid #f0d9c8;border-radius:12px;padding:10px 13px;margin-bottom:16px;font-size:12.5px;color:#7a5a45}
+.ioshint.show{display:block}
+.weather{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#fff,#fbf1ee);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:16px;min-height:64px}
+.weather .emo{font-size:32px;line-height:1}
+.weather .wx-main{font-size:14.5px;font-weight:600}
+.weather .wx-sub{font-size:12px;color:var(--muted)}
+.weather .refresh{margin-left:auto;background:transparent;border:1px solid var(--line);border-radius:8px;padding:6px 9px;font-size:13px;color:var(--muted);cursor:pointer}
+.sectlabel{font-size:12px;font-weight:700;color:var(--wine);letter-spacing:.5px;text-transform:uppercase;margin:22px 0 8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 6px 22px rgba(123,31,43,.06)}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.badge{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px}
+.b-red{background:#fbe9ec;color:var(--red-wine)}
+.b-white{background:#fbf4d8;color:#8a6d15}
+.b-tier{background:#eef0ef;color:#4a5450}
+.wname{font-size:19px;font-weight:700;margin:2px 0 3px;line-height:1.3}
+.wvar{font-size:13px;color:var(--wine2);font-weight:600;margin-bottom:8px}
+.wregion{font-size:12.5px;color:var(--muted);margin-bottom:12px}
+.reason{background:#f7efe9;border-left:3px solid var(--gold);border-radius:8px;padding:11px 13px;font-size:13.5px;margin:12px 0}
+.meta{font-size:13px;margin:10px 0 2px}.meta b{color:var(--wine)}
+.pair{font-size:13px;margin-top:4px}
+.bars{margin-top:12px}
+.bar{display:flex;align-items:center;gap:8px;margin:5px 0;font-size:12px}
+.bar .lb{width:38px;color:var(--muted)}
+.bar .track{flex:1;height:7px;background:#eee5df;border-radius:6px;overflow:hidden}
+.bar .fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--wine2),var(--wine))}
+.bar .vv{width:30px;text-align:right;color:var(--muted)}
+.lab{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-top:8px}
+.ctl{margin:12px 0}
+.ctl label{font-size:13px;font-weight:600;display:flex;justify-content:space-between}
+.ctl input[type=range]{width:100%;accent-color:var(--wine);margin-top:6px}
+.previewline{font-size:13px;color:var(--muted);margin-top:6px}
+.previewpick{font-size:14.5px;font-weight:600;margin-top:8px}
+.hist{margin-top:8px}
+.hrow{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;padding:8px 4px;border-bottom:1px solid var(--line)}
+.hrow .hd{color:var(--muted);white-space:nowrap}
+.hrow .hn{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn{background:var(--wine);color:#fff;border:none;border-radius:10px;padding:10px 16px;font-size:14px;font-weight:600;cursor:pointer;margin-top:6px}
+.btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.manual{display:none;background:#fff4ec;border:1px solid #f0d9c8;border-radius:12px;padding:12px 14px;margin-bottom:16px;font-size:13px}
+.manual.show{display:block}
+select{font-size:13px;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:#fff}
+.foot{font-size:11.5px;color:var(--muted);margin-top:26px;line-height:1.6}
+/* 품종 */
+.vdate{font-size:12px;color:var(--muted);margin-bottom:8px}
+.notifbtn{width:100%;background:#fff;border:1px solid var(--line);color:var(--wine);border-radius:12px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:14px}
+.vimg{width:100%;height:220px;border-radius:16px;background:#f0e7e0 no-repeat center/cover;display:flex;align-items:center;justify-content:center;font-size:40px;color:var(--muted);overflow:hidden}
+.vorig{font-size:22px;font-weight:800;margin-top:4px;line-height:1.25}
+.vko{font-size:14px;color:var(--wine2);font-weight:600;margin-bottom:6px}
+.vfields{margin-top:12px}
+.vfield{padding:9px 0;border-bottom:1px solid var(--line)}
+.vfield:last-child{border-bottom:0}
+.vlab{display:block;font-size:11px;font-weight:700;color:var(--wine);margin-bottom:3px;letter-spacing:.3px}
+.vval{font-size:13.5px;line-height:1.55}
+/* 퀴즈 */
+.qprogress{font-size:12px;color:var(--muted);margin-bottom:10px;font-weight:600}
+.qinput{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:10px;font-size:16px;margin-top:12px}
+.qinput:focus{outline:none;border-color:var(--wine2)}
+.qbtns{display:flex;gap:8px;margin-top:10px}
+.fb{margin-top:12px;padding:11px 13px;border-radius:10px;font-size:13.5px}
+.fb.ok{background:#e7f5ec;color:#1c7a44}
+.fb.no{background:#fdecec;color:#b3261e}
+.fribadge{display:inline-block;background:#fbf4d8;color:#8a6d15;font-weight:700;font-size:12px;padding:5px 11px;border-radius:20px;margin-bottom:10px}
+.result{text-align:center;padding:16px}
+.rbig{font-size:36px;font-weight:800;color:var(--wine)}
+.rsub{font-size:15px;margin-top:6px}
+#quizArea{display:none}
+#quizArea.show{display:block}
+#quizIntro p{font-size:14px;line-height:1.6}
+</style>
+</head>
+<body>
+<h1>🍷 오늘의 와인 & 🍇 포도 품종</h1>
+
+<div class="tabs">
+  <button class="tabbtn on" data-tab="wine">🍷 와인 추천</button>
+  <button class="tabbtn" data-tab="variety">🍇 오늘의 품종</button>
+  <button class="tabbtn" data-tab="quiz">📝 퀴즈</button>
+</div>
+
+<!-- ===== 와인 추천 ===== -->
+<div class="tabpane show" id="tab-wine">
+  <div class="install" id="installBanner">
+    <span>📲 <b>홈 화면에 앱 설치</b>하면 더 편해요</span>
+    <button class="go" id="installGo">설치</button>
+    <button class="x" id="installX" aria-label="닫기">×</button>
+  </div>
+  <div class="ioshint" id="iosHint">📲 앱처럼 쓰려면: 하단 <b>공유(⬆️)</b> → <b>홈 화면에 추가</b>.</div>
+  <div class="weather" id="weather"><div class="emo">⏳</div><div><div class="wx-main">날씨를 불러오는 중…</div></div></div>
+  <div class="manual" id="manual">
+    실시간 날씨를 불러오지 못했어요. 직접 입력해 추천받을 수 있어요.
+    <div class="row">
+      <label>최고기온 <input type="number" id="mTemp" value="28" style="width:56px"> °C</label>
+      <label>강수 <input type="number" id="mRain" value="0" style="width:56px"> mm</label>
+      <button class="btn" id="mGo" style="margin-top:0">추천</button>
+    </div>
+  </div>
+  <div class="sectlabel">오늘의 추천</div>
+  <div class="card" id="todayCard"><div class="previewline">날씨 확인 후 추천이 표시됩니다.</div></div>
+  <div class="sectlabel">🌦️ 날씨 실험실</div>
+  <div class="lab">
+    <div class="ctl"><label><span>기온 (그날 최고)</span><span id="tOut">28°C</span></label><input type="range" id="tSlider" min="-5" max="38" value="28"></div>
+    <div class="ctl"><label><span>강수량 (하루)</span><span id="rOut">10mm</span></label><input type="range" id="rSlider" min="0" max="40" value="10"></div>
+    <div class="row">
+      <select id="colorFilter"><option value="all">레드·화이트 모두</option><option value="red">레드만</option><option value="white">화이트만</option></select>
+      <span class="previewline" id="labTarget"></span>
+    </div>
+    <div class="previewpick" id="labPick"></div>
+  </div>
+  <div class="sectlabel">📖 최근 추천 기록</div>
+  <div class="hist" id="hist"></div>
+  <div class="row"><button class="btn ghost" id="resetBtn">기록 초기화</button></div>
+</div>
+
+<!-- ===== 오늘의 품종 ===== -->
+<div class="tabpane" id="tab-variety">
+  <div class="vdate" id="vDate"></div>
+  <button class="notifbtn" id="vNotifBtn">🔔 매일 12시 알림 켜기</button>
+  <div class="card" id="vCard"></div>
+  <div class="sectlabel">📅 이번 주 학습한 품종</div>
+  <div class="hist" id="vWeekList"></div>
+</div>
+
+<!-- ===== 퀴즈 ===== -->
+<div class="tabpane" id="tab-quiz">
+  <div class="card" id="quizIntro"></div>
+  <div class="card" id="quizArea" style="margin-top:14px">
+    <div class="qprogress" id="qProgress"></div>
+    <div class="vimg" id="qImg"><span>🍇</span></div>
+    <div class="vfields" id="qClues"></div>
+    <input class="qinput" id="qInput" placeholder="원어명을 입력하세요 (예: Cabernet Sauvignon)" autocomplete="off" autocapitalize="off">
+    <div class="qbtns">
+      <button class="btn" id="qSubmit" style="flex:1">정답 확인</button>
+      <button class="btn" id="qNext" style="flex:1;display:none">다음 문제</button>
+    </div>
+    <div id="qFeedback"></div>
+  </div>
+</div>
+
+<div class="foot" id="foot"></div>
+
+<script src="wines.js"></script>
+<script src="varieties.js"></script>
+<script src="app.js"></script>
+<script>
+if ('serviceWorker' in navigator) { window.addEventListener('load', function () { navigator.serviceWorker.register('service-worker.js').catch(function(){}); }); }
+(function () {
+  var banner = document.getElementById('installBanner'), iosHint = document.getElementById('iosHint');
+  var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  if (isStandalone) return;
+  var deferred = null;
+  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferred = e; if (localStorage.getItem('installDismissed') !== '1') banner.classList.add('show'); });
+  document.getElementById('installGo').addEventListener('click', function () { if (!deferred) return; deferred.prompt(); deferred.userChoice.then(function () { deferred = null; banner.classList.remove('show'); }); });
+  document.getElementById('installX').addEventListener('click', function () { banner.classList.remove('show'); localStorage.setItem('installDismissed', '1'); });
+  if (isIOS && localStorage.getItem('iosHintDismissed') !== '1') { iosHint.classList.add('show'); iosHint.addEventListener('click', function () { iosHint.classList.remove('show'); localStorage.setItem('iosHintDismissed', '1'); }); }
+})();
+</script>
+</body>
+</html>

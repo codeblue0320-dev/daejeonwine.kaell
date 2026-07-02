@@ -1,0 +1,17 @@
+{
+  "name": "오늘의 와인 & 포도 품종",
+  "short_name": "와인&품종",
+  "description": "날씨 맞춤 와인 추천 + 매일 포도 품종 학습 + 금요일 퀴즈",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#faf6f2",
+  "theme_color": "#7b1f2b",
+  "lang": "ko",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
