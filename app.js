@@ -157,7 +157,6 @@ function loadWikiImage(v, imgEl) {
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (j) {
       var src = j && ((j.thumbnail && j.thumbnail.source) || (j.originalimage && j.originalimage.source));
-      if (src) src = src.replace(/\/\d+px-/, '/480px-');
       imgCache[title] = src || null; applyImg(imgCache[title]);
     }).catch(function () { imgCache[title] = null; applyImg(null); });
   function applyImg(src) {
