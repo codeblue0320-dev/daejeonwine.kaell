@@ -1,0 +1,13 @@
+{
+  "name": "자양동 오늘의 와인",
+  "short_name": "오늘의 와인",
+  "description": "대전 자양동 날씨 맞춤 데일리 와인 추천 + 포도 품종 공부",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#faf6f2",
+  "theme_color": "#7b1f2b",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png"}
+  ]
+}
